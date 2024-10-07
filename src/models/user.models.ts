@@ -9,6 +9,7 @@ interface IUser extends Document{
     password: string
     createdAt: Date
     updatedAt: Date
+    comparePassword(pwd: string): Promise<boolean>
 }
 
 const userSchema = new Schema({
@@ -34,7 +35,7 @@ userSchema.pre('save', async function(next){
 })
 
 userSchema.methods.comparePasswords = async function(pwd: string):Promise<boolean>{
-    let user = this as Document
+    let user = this as IUser
     try{
         return await bcrypt.compare(pwd, user.password)
     } catch(e){
