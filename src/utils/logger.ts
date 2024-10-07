@@ -1,10 +1,16 @@
-import logger from "pino"
-import dayjs from "dayjs"
-import { pid } from "process"
+import pino from "pino"
 
-const log = logger({
+const log = pino({
+    transport: {
+        target: 'pino-pretty',
+        options: {
+            translateTime: 'SYS:standard'
+        }
+    },
     base: {
         pid: false
     },
-    timestamp: () => `,"time": ${dayjs().format()}`
+    timestamp: pino.stdTimeFunctions.isoTime
 })
+
+export default log
