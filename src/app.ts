@@ -8,6 +8,8 @@ import { Request, Response, NextFunction } from "express"
 const app =express()
 const port = config.get<number>("port") || 1337
 
+app.use(express.json())
+
 app.use(userRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -16,7 +18,6 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
         status: "error",
         message: "An unexpected error occured"
     })
-
 })
 
 app.listen(port, async () => {

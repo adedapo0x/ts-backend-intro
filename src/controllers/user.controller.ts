@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import logger from "../utils/logger"
 import User from "../models/user.models"
 import { CreateUserInput } from "../schema/user.schema";
+import { omit } from "lodash"
 
-export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>, res: Response): Promise<void> => {
+export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { email } = req.body
         // check if email already exists
@@ -13,9 +14,12 @@ export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>
         }       
 
         const user = await User.create(req.body)
-        res.send(user)
+        res.status(201).json({
+            message: "User created successfully!",
+            created_user: omit(user.toJSON(), "password")
+        })
     } catch (e: any) {
         logger.error(e)
-        res.status(409).send(e.message) 
+        next(e)
     }
 }
