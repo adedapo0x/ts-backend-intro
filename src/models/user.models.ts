@@ -3,7 +3,7 @@ import bcrypt from "bcrypt"
 import config from "config"
 import logger from "../utils/logger"
 
-interface IUser extends Document{
+export interface IUser extends Document {
     name: string
     email: string
     password: string
@@ -11,6 +11,7 @@ interface IUser extends Document{
     updatedAt: Date
     comparePassword(pwd: string): Promise<boolean>
 }
+
 
 const userSchema = new Schema({
     name: { type: String, required: true},
@@ -21,7 +22,7 @@ const userSchema = new Schema({
 })
 
 userSchema.pre('save', async function(next){
-    let user = this as IUser 
+    const user = this as IUser
     if (!user.isModified("password")){
         next()
     }
@@ -35,7 +36,7 @@ userSchema.pre('save', async function(next){
 })
 
 userSchema.methods.comparePasswords = async function(pwd: string):Promise<boolean>{
-    let user = this as IUser
+    const user = this as IUser
     try{
         return await bcrypt.compare(pwd, user.password)
     } catch(e){
