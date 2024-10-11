@@ -1,8 +1,10 @@
-import express, { Request, Response } from "express"
+import express from "express"
+import validate from "../middlewares/validate"
+import { httpRegister } from "../controllers/user.controller"
+import { createUserSchema } from "../schema/user.schema"
 
 const router = express.Router()
 
-router.get('/healthcheck', (req: Request, res: Response) => {
-    res.sendStatus(200)}) 
+router.post('/api/users', validate(createUserSchema), httpRegister)
 
 export default router
