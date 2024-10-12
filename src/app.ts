@@ -5,7 +5,7 @@ import logger from "./utils/logger"
 import userRouter from "./routes/user.routes"
 import { Request, Response, NextFunction } from "express"
 
-const app =express()
+const app = express()
 const port = config.get<number>("port") || 1337
 
 app.use(express.json())
