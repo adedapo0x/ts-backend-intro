@@ -4,6 +4,7 @@ import User from "../models/user.models"
 import { CreateUserInput } from "../schema/user.schema";
 import { omit } from "lodash"
 
+
 export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>, res: Response, next: NextFunction): Promise<void> => {
     try {
         const { email } = req.body
@@ -21,5 +22,22 @@ export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>
     } catch (e: any) {
         logger.error(e)
         next(e)
+    }
+}
+
+
+const createUserSession = async () => {
+
+}
+
+
+export const validatePassword = async (email:string, password: string) => {
+    try{
+        const user = await User.findOne({ email })
+        if (!user) return false
+
+        // return await User.comparePassword( {} )
+    } catch (e){
+
     }
 }

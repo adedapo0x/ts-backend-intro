@@ -13,10 +13,10 @@ app.use(express.json())
 app.use(userRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-    logger.error(err.stack)
+    logger.error(err)
     res.status(500).json({
         status: "error",
-        message: "An unexpected error occured"
+        message: "An unexpected error occurred"
     })
 })
 
