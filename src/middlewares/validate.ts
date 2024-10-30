@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { AnyZodObject } from "zod";
+import {AnyZodObject, ZodError} from "zod";
+import  logger from "../utils/logger"
+import {Error} from "mongoose";
 
 const validate = (schema: AnyZodObject) => async (req: Request, res: Response, next:NextFunction):Promise<void> => {
     try{
@@ -9,12 +11,16 @@ const validate = (schema: AnyZodObject) => async (req: Request, res: Response, n
             params: req.params
         })
         next()
-    } catch(e: any){
+    } catch(e){
+        logger.error(e)
+        if (e instanceof ZodError){
+            res.status(400).json({message: "Validation error", error: e.issues})
+        }
         res.status(400).json({
             status: "error",
-            message: "Invalid input",
-            details: e.errors
+            message: "An unexpected error occurred!",
         })
     }
 }
+
 export default validate

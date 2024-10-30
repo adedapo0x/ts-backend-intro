@@ -4,7 +4,7 @@ export const createUserSchema = object({
     body: object({
         name: string({
             required_error: "Name is required"
-        }),
+        }).min(3, "Name must have a minimum length of 3 characters"),
         email: string({
             required_error: "Email is required"
         }).email("Please enter a valid email"),
