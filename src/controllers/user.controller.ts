@@ -25,19 +25,3 @@ export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>
     }
 }
 
-
-const createUserSession = async () => {
-
-}
-
-
-export const validatePassword = async (email:string, password: string) => {
-    try{
-        const user = await User.findOne({ email })
-        if (!user) return false
-
-        // return await User.comparePassword( {} )
-    } catch (e){
-
-    }
-}

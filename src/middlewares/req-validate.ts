@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import {AnyZodObject, ZodError} from "zod";
 import  logger from "../utils/logger"
-import {Error} from "mongoose";
 
-const validate = (schema: AnyZodObject) => async (req: Request, res: Response, next:NextFunction):Promise<void> => {
+const reqValidate = (schema: AnyZodObject) => async (req: Request, res: Response, next:NextFunction):Promise<void> => {
     try{
         await schema.parseAsync({
             body: req.body,
@@ -23,4 +22,4 @@ const validate = (schema: AnyZodObject) => async (req: Request, res: Response, n
     }
 }
 
-export default validate
+export default reqValidate
