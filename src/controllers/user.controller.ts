@@ -19,7 +19,7 @@ export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>
             message: "User created successfully!",
             created_user: omit(user.toJSON(), "password")
         })
-    } catch (e: any) {
+    } catch (e) {
         logger.error(e)
         next(e)
     }

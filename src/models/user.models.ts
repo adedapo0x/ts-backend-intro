@@ -3,17 +3,19 @@ import bcrypt from "bcrypt"
 import config from "config"
 import logger from "../utils/logger"
 
-export interface IUser extends Document {
+export interface IUser{
     name: string
     email: string
     password: string
+}
+
+export interface IUserDocument extends IUser, Document {
     createdAt: Date
     updatedAt: Date
     comparePassword(pwd: string): Promise<boolean>
 }
 
-
-const userSchema = new Schema({
+const userSchema = new Schema<IUserDocument>({
     name: { type: String, required: true},
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }
@@ -22,13 +24,13 @@ const userSchema = new Schema({
 })
 
 userSchema.pre('save', async function(next){
-    const user = this as IUser
+    const user = this as IUserDocument
     if (!user.isModified("password")){
         next()
     }
     try{
         const salt = await bcrypt.genSalt(config.get<number>('saltNo'))
-        user.password = await bcrypt.hashSync(user.password, salt)
+        user.password = await bcrypt.hash(user.password, salt)
     } catch(e){
         logger.error("Error encountered while hashing password")
         throw e
@@ -40,11 +42,11 @@ userSchema.methods.comparePasswords = async function(pwd: string):Promise<boolea
     try{
         return await bcrypt.compare(pwd, user.password)
     } catch(e){
-        logger.error("Error occured while comparing passwords")
+        logger.error("Error occurred while comparing passwords")
         return false
     }
 }
 
-const User = mongoose.model<IUser>("User", userSchema)
+const User = mongoose.model<IUserDocument>("User", userSchema)
 
 export default User
