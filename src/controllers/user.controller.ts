@@ -4,8 +4,7 @@ import User from "../models/user.models"
 import { CreateUserInput } from "../schema/user.schema";
 import { omit } from "lodash"
 
-
-export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>, res: Response, next: NextFunction): Promise<void> => {
+export const httpRegister = async (req: Request<{}, {}, CreateUserInput["body"]>, res: Response, next: NextFunction) => {
     try {
         const { email } = req.body
         // check if email already exists

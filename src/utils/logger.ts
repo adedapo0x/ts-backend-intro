@@ -4,7 +4,8 @@ const log = pino({
     transport: {
         target: 'pino-pretty',
         options: {
-            translateTime: 'SYS:standard'
+            translateTime: 'SYS:standard',
+            // colorize: true
         }
     },
     base: {

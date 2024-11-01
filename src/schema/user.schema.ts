@@ -14,7 +14,7 @@ export const createUserSchema = object({
         confirmPassword: string({
             required_error: "Password is required"
         })
-    }).refine((data) => data.password === data.confirmPassword, {
+    }).refine((data):boolean => data.password === data.confirmPassword, {
         message: "Passwords do not match",
         path: ["confirmPassword"]
     })
