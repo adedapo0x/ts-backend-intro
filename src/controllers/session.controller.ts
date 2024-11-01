@@ -2,12 +2,15 @@ import {validatePassword} from "../middlewares/password-validate";
 import {Request, Response} from "express"
 import Session from "../models/session.model";
 
+
 interface InputRequestBody {
     name: string;
     email: string;
     password: string;
     confirmPassword: string;
 }
+
+
 
 export const createSession = async (userID:string, userAgent:string) => {
     const session = await Session.create({user: userID, userAgent})
