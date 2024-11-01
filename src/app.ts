@@ -1,9 +1,13 @@
 import express from "express"
+import dotenv from "dotenv"
 import config from "config"
 import connectDB from "./utils/connectDB"
 import logger from "./utils/logger"
 import userRouter from "./routes/user.routes"
 import { Request, Response, NextFunction } from "express"
+
+import { privateKey, publicKey } from "../config/key";
+dotenv.config()
 
 const app = express()
 const port = config.get<number>("port") || 1337
