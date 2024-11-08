@@ -6,7 +6,7 @@ import logger from "./utils/logger"
 import userRouter from "./routes/user.routes"
 import { Request, Response, NextFunction } from "express"
 
-import { privateKey, publicKey } from "../config/key";
+import { privateKey, publicKey } from "../config/key"
 dotenv.config()
 
 const app = express()
