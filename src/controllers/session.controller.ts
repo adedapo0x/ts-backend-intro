@@ -3,12 +3,13 @@ import {Request, Response} from "express"
 import Session from "../models/session.model";
 import {signJWT} from "../utils/jwt";
 import config from "config"
+import logger from "../utils/logger"
+import { createSessionInput } from "../schema/session.schema"
 
 interface InputRequestBody {
     name: string;
     email: string;
     password: string;
-    confirmPassword: string;
 }
 
 export const createSession = async (userID:string, userAgent:string) => {
@@ -16,10 +17,10 @@ export const createSession = async (userID:string, userAgent:string) => {
     return session.toJSON()
 }
 
-export async function createUserSession(req: Request<{}, {}, InputRequestBody>, res: Response) {
-    try{
+export async function createUserSession(req: Request<{}, {}, createSessionInput["body"]>, res: Response) {
+    try {
         // Validates user password
-        const user= await validatePassword(req.body)
+        const user = await validatePassword(req.body)
         if (!user) return res.status(401).json({message: "Invalid email or password"})
 
         // create session
@@ -29,10 +30,11 @@ export async function createUserSession(req: Request<{}, {}, InputRequestBody>, 
         const accessToken = signJWT({...user, session: session._id}, {expiresIn: config.get("accessTokenTtl")})
 
         // create refresh Token
-
+        const refreshToken = signJWT({...user, session: session._id}, {expiresIn: config.get("refreshTokenTtl")})
+        return res.json({accessToken, refreshToken})
 
     } catch (e) {
-
+        logger.error("Error creating user session")
+        res.status(400).json({message: "Error encountered!"})
     }
-
 }
