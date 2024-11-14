@@ -1,23 +1,17 @@
 import {validatePassword} from "../middlewares/password-validate";
-import {Request, Response} from "express"
+import {Request, Response } from "express"
 import Session from "../models/session.model";
 import {signJWT} from "../utils/jwt";
 import config from "config"
 import logger from "../utils/logger"
 import { createSessionInput } from "../schema/session.schema"
 
-interface InputRequestBody {
-    name: string;
-    email: string;
-    password: string;
-}
-
 export const createSession = async (userID:string, userAgent:string) => {
     const session = await Session.create({user: userID, userAgent})
     return session.toJSON()
 }
 
-export async function createUserSession(req: Request<{}, {}, createSessionInput["body"]>, res: Response) {
+export const createUserSession = async (req: Request, res: Response) => {
     try {
         // Validates user password
         const user = await validatePassword(req.body)
@@ -35,6 +29,6 @@ export async function createUserSession(req: Request<{}, {}, createSessionInput[
 
     } catch (e) {
         logger.error("Error creating user session")
-        res.status(400).json({message: "Error encountered!"})
+        return res.status(400).json({message: "Error encountered!"})
     }
 }

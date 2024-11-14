@@ -11,3 +11,4 @@ router.post('/api/users', reqValidate(createUserSchema), httpRegister)
 router.post("/api/session", reqValidate(createSessionSchema), createUserSession)
 
 export default router
+

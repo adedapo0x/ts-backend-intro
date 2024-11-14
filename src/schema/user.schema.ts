@@ -1,4 +1,4 @@
-import { object, string, TypeOf } from "zod"
+import z, { object, string } from "zod"
 
 export const createUserSchema = object({
     body: object({
@@ -20,5 +20,4 @@ export const createUserSchema = object({
     })
 })
 
-
-export type CreateUserInput = TypeOf<typeof createUserSchema>
+export type UserInputType = z.infer<typeof createUserSchema>
