@@ -5,8 +5,6 @@ export interface ISession extends Document {
     user: IUserDocument["_id"]
     valid: boolean
     userAgent: string
-    createdAt: Date
-    updatedAt: Date
 }
 
 const sessionSchema = new Schema<ISession>({
