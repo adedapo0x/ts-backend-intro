@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import z, { ZodError } from "zod";
 import  logger from "../utils/logger"
 
-export interface validationSchema  {
+export interface validationSchema {
     body?: z.ZodType<any>
     query?: z.ZodType<any>
     params?: z.ZodType<any>
@@ -25,11 +25,12 @@ const reqValidate = function (schema: validationSchema) {
             logger.error(e)
             if (e instanceof ZodError) {
                 res.status(400).json({message: "Validation error", error: e.issues})
+            } else {
+                res.status(400).json({
+                    status: "error",
+                    message: "An unexpected error occurred!",
+                })
             }
-            res.status(400).json({
-                status: "error",
-                message: "An unexpected error occurred!",
-            })
         }
     }
 }

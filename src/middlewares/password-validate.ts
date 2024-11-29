@@ -10,7 +10,7 @@ export const validatePassword = async ({ email, password, }:{email:string; passw
         const isValid = await user.comparePassword(password)
         if (!isValid) return false
 
-        return omit(user.toJSON(), ["email", "name", "password"])
+        return omit(user.toJSON(), ["password"])
     } catch (e){
         logger.error("Error encountered while confirming password")
         throw e
