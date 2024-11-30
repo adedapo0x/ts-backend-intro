@@ -7,12 +7,15 @@ import userRouter from "./routes/user.routes"
 import { Request, Response, NextFunction } from "express"
 
 import { privateKey, publicKey } from "../config/key"
+import {deserializeUser} from "./middlewares/deserializeUser";
 dotenv.config()
 
 const app = express()
 const port = config.get<number>("port") || 1337
 
 app.use(express.json())
+
+app.use(deserializeUser)
 
 app.use(userRouter)
 
