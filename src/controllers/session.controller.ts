@@ -37,8 +37,10 @@ export const createUserSession = async (req: Request<{}, {}, createSessionInput>
 }
 
 export const getUserSessions = async (req: Request, res: Response) => {
-    const userID = res.locals.user
+    const userID = res.locals.user.userId
 
+    const sessions = await Session.find({user: userID, valid: true})
 
+    res.json({sessions})
 
 }
