@@ -16,7 +16,6 @@ const port = config.get<number>("port") || 1337
 app.use(express.json())
 
 app.use(deserializeUser)
-
 app.use(userRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
