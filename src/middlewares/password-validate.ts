@@ -12,7 +12,7 @@ export const validatePassword = async ({ email, password, }:{email:string; passw
 
         return omit(user.toJSON(), ["password"])
     } catch (e){
-        logger.error("Error encountered while confirming password")
+        logger.error("Wrong password!!")
         throw e
     }
 }
