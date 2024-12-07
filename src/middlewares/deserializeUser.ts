@@ -27,16 +27,16 @@ const reIssueAccessToken = async ({refreshToken}: {refreshToken: string}) => {
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
     const accessToken = get(req, "headers.authorization", "").replace(/^Bearer\s/, "")
-    const rawRefreshToken = get(req, "headers.x-refresh")
+    const rawRefreshToken = get(req, "headers.x-refresh") // as content here may be a string or an array of strings
     const refreshToken = Array.isArray(rawRefreshToken) ? rawRefreshToken[0] : rawRefreshToken
     if (!accessToken) {
-        next()
+        return next()
     }
     try{
         const { decoded, expired } = verifyJWT(accessToken)
         if (decoded && !expired) {
             res.locals.user = decoded
-            next()
+            return next()
         }
         if (expired && refreshToken){
             const newAccessToken = await reIssueAccessToken({ refreshToken })
@@ -48,10 +48,10 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
 
                 const result = verifyJWT(newAccessToken)
                 res.locals.user = result.decoded
-                next()
+                return next()
             }
-            next()
         }
+        return next()
     } catch (e){
         logger.error("Error verifying JWT: ", e)
         res.status(400).json({message: "Error verifying JWT"})

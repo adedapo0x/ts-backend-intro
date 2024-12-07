@@ -5,7 +5,7 @@ const log = pino({
         target: 'pino-pretty',
         options: {
             translateTime: 'SYS:standard',
-            // colorize: true
+            colorize: true
         }
     },
     base: {
