@@ -29,7 +29,7 @@ export const productSchema = {
 }
 
 export const createProductSchema = object({ payload })
-export const updateProductSchema = object({ payload, paramsPayload })
+export const updateProductSchema = object({payload, paramsPayload })
 export const getProductSchema = object({ paramsPayload })
 export const deleteProductSchema = object({ paramsPayload })
 
