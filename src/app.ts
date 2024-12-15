@@ -4,6 +4,7 @@ import config from "config"
 import connectDB from "./utils/connectDB"
 import logger from "./utils/logger"
 import userRouter from "./routes/user.routes"
+import productRouter from "./routes/product.routes"
 import { Request, Response, NextFunction } from "express"
 
 import { privateKey, publicKey } from "../config/key"
@@ -17,6 +18,7 @@ app.use(express.json())
 
 app.use(deserializeUser)
 app.use(userRouter)
+app.use(productRouter)
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     logger.error(err)
