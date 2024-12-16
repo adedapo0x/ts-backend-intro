@@ -8,21 +8,35 @@ import config from "config";
 
 
 const reIssueAccessToken = async ({refreshToken}: {refreshToken: string}) => {
-    const decoded = verifyJWT(refreshToken)
-    if (!decoded || !get(decoded, "session")) return false
+    try{
+        const obj = verifyJWT(refreshToken)
+        if (!obj.decoded || !get(obj.decoded, "session")){
+            logger.error(1)
+            return false
+        }
 
-    const session = await Session.findById(get(decoded, "session"))
-    if (!session || !session.valid) return false
+        const session = await Session.findById(get(obj.decoded, "session"))
+        if (!session || !session.valid){
+            logger.error(2)
+            return false
+        }
 
-    const user = await User.findOne({_id: session.user}).lean()
+        const user = await User.findOne({_id: session.user}).lean()
 
-    if (!user) return false
+        if (!user) {
+            logger.error(3)
+            return false
+        }
 
-    const accessToken = signJWT(
-        {userId: user._id, session: session._id},
-        {expiresIn: config.get("accessTokenTtl")}
-    )
-    return accessToken
+        const accessToken = signJWT(
+            {userId: user._id, session: session._id},
+            {expiresIn: config.get("accessTokenTtl")}
+        )
+        return accessToken
+    } catch (e) {
+        logger.error("Error re-issuing access token", e)
+    }
+
 }
 
 export const deserializeUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -40,6 +54,7 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
         }
         if (expired && refreshToken){
             const newAccessToken = await reIssueAccessToken({ refreshToken })
+            logger.info(newAccessToken)
             if (!newAccessToken){
                 res.status(403).json({message: "Error confirming authorization"})
             }
@@ -51,7 +66,6 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
                 return next()
             }
         }
-        return next()
     } catch (e){
         logger.error("Error verifying JWT: ", e)
         res.status(400).json({message: "Error verifying JWT"})
