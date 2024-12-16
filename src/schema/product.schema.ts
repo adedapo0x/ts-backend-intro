@@ -1,4 +1,5 @@
 import {object, string, number, TypeOf } from "zod"
+import {validationSchema} from "../middlewares/req-validate";
 
 
 const payload = object({
@@ -23,7 +24,7 @@ const paramsPayload = object({
     })
 })
 
-export const productSchema = {
+export const productSchema: validationSchema = {
     body: payload,
     params: paramsPayload
 }
