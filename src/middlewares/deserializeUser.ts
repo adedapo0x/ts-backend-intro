@@ -11,20 +11,17 @@ const reIssueAccessToken = async ({refreshToken}: {refreshToken: string}) => {
     try{
         const obj = verifyJWT(refreshToken)
         if (!obj.decoded || !get(obj.decoded, "session")){
-            logger.error(1)
             return false
         }
 
         const session = await Session.findById(get(obj.decoded, "session"))
         if (!session || !session.valid){
-            logger.error(2)
             return false
         }
 
         const user = await User.findOne({_id: session.user}).lean()
 
         if (!user) {
-            logger.error(3)
             return false
         }
 
@@ -54,7 +51,6 @@ export const deserializeUser = async (req: Request, res: Response, next: NextFun
         }
         if (expired && refreshToken){
             const newAccessToken = await reIssueAccessToken({ refreshToken })
-            logger.info(newAccessToken)
             if (!newAccessToken){
                 res.status(403).json({message: "Error confirming authorization"})
             }
